@@ -23,11 +23,10 @@ app.get('/', (req, res) => {
     res.render('home')
 });
 
-app.get('/makepicblog', async (req, res) => {
-    const pic = new Picblog({title: 'San Francisco', description:'Weather'});
-    await pic.save();
-    res.send(pic)
-})
+app.get('/picblogs', async (req, res) => {
+    const picblogs = await Picblog.find({});
+    res.render('picblogs/index', { picblogs })
+});
 
 app.listen(3000, () => {
     console.log('Live on 3000')
