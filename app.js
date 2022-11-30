@@ -20,6 +20,8 @@ mongoose.connect('mongodb://127.0.0.1/pic-blog', {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.urlencoded({ extended: true }));
+
 app.get('/', (req, res) => {
     res.render('home')
 });
@@ -45,6 +47,21 @@ app.get('/picblogs', async (req, res) => {
     // await pic.save();
     // res.send(pic);
 // })
+
+app.get('/picblogs/new', (req, res) => {
+    res.render('picblogs/new');
+})
+
+app.post('/picblogs', async (req, res) => {
+    const pic = new Picblog(req.body.pic);
+    await pic.save();
+    res.redirect(`/picblogs/${pic._id}`)
+})
+
+app.get('/picblogs/:id', async (req, res) => {
+    const pic = await Picblog.findById(req.params.id);
+    res.render('picblogs/show', { pic });
+})
 
 app.listen(3000, () => {
     console.log('Live on 3000')
